@@ -30,7 +30,7 @@ class _CastCard extends StatelessWidget {
         borderRadius: BorderRadius.all(Radius.circular(20.0)),
         color: Colors.indigo,
       ),
-      margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+      margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
       height: 20,
       width: 80,
       child: Column(

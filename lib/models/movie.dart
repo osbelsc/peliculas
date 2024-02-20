@@ -40,6 +40,13 @@ class Movie {
     return 'https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg';
   }
 
+  get titleMovie {
+    if (this.title != null) {
+      return '${this.title}';
+    }
+    return 'title';
+  }
+
   factory Movie.fromJson(String str) => Movie.fromMap(json.decode(str));
 
   factory Movie.fromMap(Map<String, dynamic> json) => Movie(
