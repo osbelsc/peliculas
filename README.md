@@ -1,6 +1,6 @@
 # peliculass
 
-A new Flutter project.
+Apk para vizualizacion de las peliculas del momento 
 
 ## Getting Started
 
