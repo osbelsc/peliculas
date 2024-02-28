@@ -9,6 +9,8 @@ class MoviesProvider extends ChangeNotifier {
   String _baseUrl = 'api.themoviedb.org';
   List<Movie> onDisplayMovies = [];
   List<Movie> popularMovies = [];
+  Map<int, List<Cast>> castMovie = {};
+  int _popularPage = 0;
   MoviesProvider() {
     print('inicianlizado');
     this.getNowPlayingMovies();
@@ -26,22 +28,34 @@ class MoviesProvider extends ChangeNotifier {
   }
 
   getNowPlayingMovies() async {
-    final jsonData = await _getJsonData('3/movie/now_playing');
+    final jsonData = await this._getJsonData('3/movie/now_playing');
     final nowPlayingResponse = NowPlayingResponse.fromJson(jsonData);
     this.onDisplayMovies = nowPlayingResponse.results;
+    print(onDisplayMovies);
     notifyListeners();
   }
 
   getPopularMovies() async {
-    final jsonData = await _getJsonData('3/movie/now_playing');
+    _popularPage++;
+    final jsonData =
+        await this._getJsonData('3/movie/now_playing', _popularPage);
 
     final nowPopularPlayingResponse = PopularMovies.fromJson(jsonData);
-
-    print(nowPopularPlayingResponse.results[0].posterPath);
     this.popularMovies = [
       ...popularMovies,
       ...nowPopularPlayingResponse.results
     ];
     notifyListeners();
+  }
+
+  Future<List<Cast>> getMovieCast(int idMovie) async {
+    if (castMovie.containsKey(idMovie)) return castMovie[idMovie]!;
+    print('piediendo data');
+    final jsonData = await this._getJsonData('3/movie/$idMovie/credits');
+
+    final creditsMovieResponse = CreditsResponse.fromJson(jsonData);
+    this.castMovie[idMovie] = creditsMovieResponse.cast;
+    print(creditsMovieResponse);
+    return creditsMovieResponse.cast;
   }
 }

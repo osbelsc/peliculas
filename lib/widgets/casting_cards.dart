@@ -1,53 +1,80 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../models/models.dart';
+import '../providers/movie_provider.dart';
 
 class CastingCard extends StatelessWidget {
-  const CastingCard({super.key});
+  final int idMovie;
+  CastingCard(this.idMovie);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 20),
-      height: 150,
-      width: double.infinity,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: 10,
-        itemBuilder: (BuildContext context, int index) {
-          return _CastCard();
-        },
-      ),
+    final moviesProvider = Provider.of<MoviesProvider>(context);
+
+    return FutureBuilder(
+      future: moviesProvider.getMovieCast(idMovie),
+      builder: (BuildContext context, AsyncSnapshot<List<Cast>> snapshot) {
+        if (!snapshot.hasData) {
+          return Container(
+            child: CupertinoActivityIndicator(),
+          );
+        }
+        final List<Cast> cast = snapshot.data!;
+        return Column(
+          children: [
+            Container(
+                padding: EdgeInsets.only(left: 20.0),
+                alignment: AlignmentDirectional.topStart,
+                child: Text('Actores')),
+            Container(
+              margin: EdgeInsets.only(bottom: 20),
+              height: 170,
+              width: double.infinity,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: 10,
+                itemBuilder: (_, int index) {
+                  return _CastCard(cast[index]);
+                },
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
 
 class _CastCard extends StatelessWidget {
-  const _CastCard({super.key});
+  final Cast actor;
+
+  _CastCard(this.actor);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(20.0)),
-        color: Colors.indigo,
-      ),
-      margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-      height: 20,
-      width: 80,
+    return Card(
+      color: Colors.black38,
+      clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
-          Expanded(
-            child: ClipRRect(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
-              child: FadeInImage(
-                placeholder: AssetImage('assets/loading2.gif'),
-                image: AssetImage('assets/loading2.gif'),
-                fit: BoxFit.cover,
-              ),
-            ),
+          FadeInImage(
+            width: 100,
+            height: 100,
+            image: NetworkImage(actor.fullProfilePath),
+            placeholder: AssetImage('assets/loading2.gif'),
+            fadeInDuration: Duration(milliseconds: 200),
+            fit: BoxFit.cover,
           ),
-          Text(
-            "Adipisicing ad sint ",
-            textAlign: TextAlign.center,
+          Container(
+            width: 90.0,
+            alignment: AlignmentDirectional.center,
+            padding: EdgeInsets.all(5.0),
+            child: Text(
+              actor.name,
+              maxLines: 2,
+            ),
           ),
         ],
       ),

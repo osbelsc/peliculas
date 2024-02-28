@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:peliculass/providers/movie_provider.dart';
+import 'package:peliculass/search/search_delegate.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/widgets.dart';
@@ -16,13 +17,21 @@ class HomePage extends StatelessWidget {
         title: Text('Peliculas'),
         elevation: 10,
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.search_outlined))
+          IconButton(
+              onPressed: () =>
+                  showSearch(context: context, delegate: MovieSearchDelegate()),
+              icon: Icon(
+                Icons.search_outlined,
+              ))
         ],
       ),
       body: SingleChildScrollView(
         child: Column(children: [
           CardSwiper(movies: moviesProvider.onDisplayMovies),
-          MovieSlider(movies: moviesProvider.popularMovies, title: "Populares"),
+          MovieSlider(
+              movies: moviesProvider.popularMovies,
+              title: "Populares",
+              onNextPage: () => moviesProvider.getPopularMovies()),
         ]),
       ),
     );

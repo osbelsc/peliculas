@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:peliculass/models/movie.dart';
+import 'package:peliculass/providers/movie_provider.dart';
+import 'package:provider/provider.dart';
+import '../models/models.dart';
 
 import '../widgets/widgets.dart';
 
 class DetailsPage extends StatelessWidget {
-  const DetailsPage({super.key});
+  DetailsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final String movie =
-        ModalRoute.of(context)?.settings.arguments.toString() ?? 'no movie';
+    final Movie movie = ModalRoute.of(context)!.settings.arguments as Movie;
+
     return Scaffold(
       body: CustomScrollView(slivers: [
-        _CustomAppbar(),
+        _CustomAppbar(movie),
         SliverList(
           delegate: SliverChildListDelegate([
-            _PosterandTitle(),
-            _Overview(),
-            _Overview(),
-            _Overview(),
-            _Overview(),
-            CastingCard(),
+            _PosterandTitle(movie),
+            _Overview(movie),
+            CastingCard(movie.id),
           ]),
         ),
       ]),
@@ -28,20 +29,47 @@ class DetailsPage extends StatelessWidget {
 }
 
 class _PosterandTitle extends StatelessWidget {
-  const _PosterandTitle({super.key});
+  final Movie movie;
+  const _PosterandTitle(this.movie, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        _Poster(),
+        _Poster(movie),
+        Container(
+          margin: EdgeInsets.only(left: 10.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                movie.title,
+                textAlign: TextAlign.left,
+              ),
+              Text(
+                movie.originalTitle,
+                textAlign: TextAlign.left,
+              ),
+              Row(
+                children: [
+                  Icon(Icons.star_outline),
+                  Text(
+                    '${movie.voteAverage}',
+                    textAlign: TextAlign.left,
+                  )
+                ],
+              )
+            ],
+          ),
+        )
       ],
     );
   }
 }
 
 class _Poster extends StatelessWidget {
-  const _Poster({super.key});
+  final Movie movie;
+  const _Poster(this.movie, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +82,7 @@ class _Poster extends StatelessWidget {
         child: FadeInImage(
           placeholder: AssetImage('assets/loading2.gif'),
           image: NetworkImage(
-            ('https://m.media-amazon.com/images/M/MV5BODA4NTk3MTQwN15BMl5BanBnXkFtZTcwNjUwMTMxNA@@._V1_.jpg'),
+            (movie.fullPosterImg),
           ),
           fit: BoxFit.cover,
         ),
@@ -64,7 +92,9 @@ class _Poster extends StatelessWidget {
 }
 
 class _CustomAppbar extends StatelessWidget {
-  const _CustomAppbar({super.key});
+  final Movie movie;
+
+  const _CustomAppbar(this.movie, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -75,11 +105,11 @@ class _CustomAppbar extends StatelessWidget {
       pinned: true,
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: true,
-        title: Text('titulo.pelicula'),
+        title: Text(movie.originalTitle),
         background: FadeInImage(
           placeholder: AssetImage('assets/loading2.gif'),
           image: NetworkImage(
-            ('https://m.media-amazon.com/images/M/MV5BODA4NTk3MTQwN15BMl5BanBnXkFtZTcwNjUwMTMxNA@@._V1_.jpg'),
+            (movie.fullBackdropPath),
           ),
           fit: BoxFit.cover,
         ),
@@ -89,14 +119,16 @@ class _CustomAppbar extends StatelessWidget {
 }
 
 class _Overview extends StatelessWidget {
-  const _Overview({super.key});
+  final Movie movie;
+
+  const _Overview(this.movie, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
       child: Text(
-        'Reprehenderit adipisicing ipsum aliqua minim in sunt consequat. Velit nostrud ad non qui. Cupidatat laborum quis nisi ea et aliqua non sint Lorem irure dolor. Ea cillum ipsum excepteur ipsum ut nisi magna est amet do duis anim id. Cupidatat exercitation ex in in ex aute anim sunt laboris deserunt. Officia do officia ad amet reprehenderit incididunt culpa.',
+        movie.overview,
         textAlign: TextAlign.justify,
       ),
     );
