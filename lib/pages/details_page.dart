@@ -77,14 +77,17 @@ class _Poster extends StatelessWidget {
       margin: EdgeInsets.only(top: 20.0, left: 20.0),
       width: 100,
       height: 150,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20.0),
-        child: FadeInImage(
-          placeholder: AssetImage('assets/loading2.gif'),
-          image: NetworkImage(
-            (movie.fullPosterImg),
+      child: Hero(
+        tag: movie.heroid!,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20.0),
+          child: FadeInImage(
+            placeholder: AssetImage('assets/loading2.gif'),
+            image: NetworkImage(
+              (movie.fullPosterImg),
+            ),
+            fit: BoxFit.cover,
           ),
-          fit: BoxFit.cover,
         ),
       ),
     );

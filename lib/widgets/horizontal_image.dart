@@ -60,10 +60,16 @@ class _MovieSliderState extends State<MovieSlider> {
                   itemCount: widget.movies.length,
                   itemBuilder: (_, int index) {
                     final movie = widget.movies[index];
+                    movie.heroid =
+                        '${widget.title}-${index}-${widget.movies[index].title}';
                     return GestureDetector(
                         onTap: () => Navigator.pushNamed(context, 'details',
                             arguments: movie),
-                        child: _MoviePoster(movie));
+                        child: Hero(
+                            tag: movie.heroid!,
+                            child: _MoviePoster(
+                              movie,
+                            )));
                   }),
             ),
           ],
@@ -89,7 +95,15 @@ class _MovieSliderState extends State<MovieSlider> {
                   itemCount: widget.movies.length,
                   itemBuilder: (_, int index) {
                     final movie = widget.movies[index];
-                    return Container(width: 100.0, child: _MoviePoster(movie));
+                    movie.heroid =
+                        '${widget.title}-${index}-${widget.movies[index].title}';
+                    return Container(
+                        width: 100.0,
+                        child: Hero(
+                            tag: movie.heroid!,
+                            child: _MoviePoster(
+                              movie,
+                            )));
                   }),
             ),
           ],

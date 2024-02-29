@@ -36,6 +36,7 @@ class MovieSearchDelegate extends SearchDelegate {
   @override
   Widget buildSuggestions(BuildContext context) {
     final moviesProvider = Provider.of<MoviesProvider>(context);
+    moviesProvider.getSuggestionsByQuery(query);
     if (query.isEmpty) {
       return Container(
           alignment: Alignment.center,
@@ -49,8 +50,8 @@ class MovieSearchDelegate extends SearchDelegate {
           ));
     }
 
-    return FutureBuilder(
-      future: moviesProvider.getSearchMovies(query),
+    return StreamBuilder(
+      stream: moviesProvider.suggestionsStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (!snapshot.hasData) {
           return Container(
@@ -63,18 +64,24 @@ class MovieSearchDelegate extends SearchDelegate {
           child: ListView.builder(
             itemCount: movies.length,
             itemBuilder: (_, int index) {
-              return ListTile(
-                leading: Container(
-                  width: 50.0,
-                  height: 90.0,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                  child: FadeInImage(
-                      placeholder: AssetImage('assets/loading2.gif'),
-                      image: NetworkImage(movies[index].fullPosterImg)),
+              movies[index].heroid = 'swiper-${movies[index].id}';
+              return Hero(
+                tag: movies[index].heroid!,
+                child: ListTile(
+                  leading: Container(
+                    width: 50.0,
+                    height: 90.0,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                    child: FadeInImage(
+                        placeholder: AssetImage('assets/loading2.gif'),
+                        image: NetworkImage(movies[index].fullPosterImg)),
+                  ),
+                  title: Text(movies[index].title),
+                  subtitle: Text(movies[index].originalTitle),
+                  onTap: () => Navigator.pushNamed(context, 'details',
+                      arguments: movies[index]),
                 ),
-                title: Text(movies[index].title),
-                subtitle: Text(movies[index].originalTitle),
               );
             },
           ),
