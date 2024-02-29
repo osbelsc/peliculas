@@ -14,6 +14,10 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Image.asset('assets/pelicula.png'),
+          onPressed: () {},
+        ),
         title: Text('Peliculas'),
         elevation: 10,
         actions: [
@@ -22,7 +26,14 @@ class HomePage extends StatelessWidget {
                   showSearch(context: context, delegate: MovieSearchDelegate()),
               icon: Icon(
                 Icons.search_outlined,
-              ))
+              )),
+          Container(
+            margin: EdgeInsets.only(right: 10.0),
+            child: CircleAvatar(
+              backgroundImage: AssetImage('assets/unnamed.png'),
+              backgroundColor: Colors.white70,
+            ),
+          ),
         ],
       ),
       body: SingleChildScrollView(

@@ -44,7 +44,7 @@ class MovieSearchDelegate extends SearchDelegate {
             children: [
               Icon(Icons.movie_creation_outlined,
                   color: Colors.indigo, size: 100),
-              Text('No existen resultados')
+              Text('Busca la pelicula de tu agrado')
             ],
           ));
     }
@@ -54,16 +54,27 @@ class MovieSearchDelegate extends SearchDelegate {
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (!snapshot.hasData) {
           return Container(
+            alignment: Alignment.center,
             child: CupertinoActivityIndicator(),
           );
         }
         final List<Movie> movies = snapshot.data!;
         return Container(
           child: ListView.builder(
-            itemCount: 10,
+            itemCount: movies.length,
             itemBuilder: (_, int index) {
               return ListTile(
+                leading: Container(
+                  width: 50.0,
+                  height: 90.0,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                  child: FadeInImage(
+                      placeholder: AssetImage('assets/loading2.gif'),
+                      image: NetworkImage(movies[index].fullPosterImg)),
+                ),
                 title: Text(movies[index].title),
+                subtitle: Text(movies[index].originalTitle),
               );
             },
           ),
