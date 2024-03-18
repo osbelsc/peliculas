@@ -3,26 +3,33 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:peliculass/models/search_movies_response.dart';
+import 'package:peliculass/models/toprated_response.dart';
+import 'package:peliculass/models/upcoming_movies_response.dart';
 
 import '../helpers/debouncer.dart';
 import '../models/models.dart';
 
 class MoviesProvider extends ChangeNotifier {
   String _language = 'es-ES';
-  String _Apikey = '37598ea376ac8da5f101e71bb9c3435f';
+  String _Apikey = 'e644a6efcbf58cd4ca72748c548f13d5';
   String _baseUrl = 'api.themoviedb.org';
   List<Movie> onDisplayMovies = [];
   List<Movie> popularMovies = [];
+  List<Movie> upcomingMovies = [];
+  List<Movie> topRatedMovies = [];
   Map<int, List<Cast>> castMovie = {};
   int _popularPage = 0;
   final debouncer = Debouncer(
       duration: Duration(
     milliseconds: 500,
   ));
+
   MoviesProvider() {
     print('inicianlizado');
     this.getNowPlayingMovies();
     this.getPopularMovies();
+    this.getUpcomingMovies();
+    this.getTopRatedMovies();
   }
 
   final StreamController<List<Movie>> _suggestionsStreamControler =
@@ -61,9 +68,31 @@ class MoviesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  getTopRatedMovies() async {
+    _popularPage++;
+    final jsonData = await this._getJsonData('3/movie/top_rated', _popularPage);
+
+    final topRatedResponse = TopRatedMovies.fromJson(jsonData);
+    this.topRatedMovies = [...topRatedMovies, ...topRatedResponse.results];
+    notifyListeners();
+  }
+
+  getUpcomingMovies() async {
+    _popularPage++;
+    final jsonData = await this._getJsonData('3/movie/upcoming', _popularPage);
+
+    final upcomingMoviesResponse = UpcomingMovies.fromJson(jsonData);
+
+    this.upcomingMovies = [
+      ...upcomingMovies,
+      ...upcomingMoviesResponse.results
+    ];
+    notifyListeners();
+  }
+
   Future<List<Cast>> getMovieCast(int idMovie) async {
     if (castMovie.containsKey(idMovie)) return castMovie[idMovie]!;
-    print('piediendo data');
+
     final jsonData = await this._getJsonData('3/movie/$idMovie/credits');
 
     final creditsMovieResponse = CreditsResponse.fromJson(jsonData);

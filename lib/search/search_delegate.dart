@@ -45,7 +45,7 @@ class MovieSearchDelegate extends SearchDelegate {
             children: [
               Icon(Icons.movie_creation_outlined,
                   color: Colors.indigo, size: 100),
-              Text('Busca la pelicula de tu agrado')
+              Text('No Hay informacion de peliculas')
             ],
           ));
     }

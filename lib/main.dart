@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
         'details': (_) => DetailsPage(),
       },
       theme: ThemeData.dark()
-          .copyWith(appBarTheme: AppBarTheme(color: Colors.indigo)),
+          .copyWith(appBarTheme: AppBarTheme(color: Colors.black26)),
     );
   }
 }
